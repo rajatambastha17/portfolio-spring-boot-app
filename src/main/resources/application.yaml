@@ -1,0 +1,18 @@
+server:
+    port: 8082
+
+spring:
+    application:
+        name: Project-Portfolio
+    datasource:
+      url: jdbc:postgresql://localhost:5432/portfolio
+      username: postgres
+      password: 123456
+    jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+
+# JWT secret key (for demo only, store safely in real app!)
+jwt:
+  secret: t2iK3fN4oP5qR6sT7uV8wX9yZ0aB1cD2eF3gH4iJ5
