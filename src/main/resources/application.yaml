@@ -15,4 +15,6 @@ spring:
 
 # JWT secret key (for demo only, store safely in real app!)
 jwt:
-  secret: t2iK3fN4oP5qR6sT7uV8wX9yZ0aB1cD2eF3gH4iJ5
+  secret: nkWd3MDZVV449pLVJ7iIyfG+FhdKB4hK3N08IrIize4=
+  refreshTokenExpirationMs: 86400000
+  

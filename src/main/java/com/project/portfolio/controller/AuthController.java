@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.portfolio.model.request.AuthenticationRequest;
+import com.project.portfolio.model.request.RefreshTokenRequest;
 import com.project.portfolio.model.request.RegisterRequest;
 import com.project.portfolio.model.response.AuthenticationResponse;
-import com.project.portfolio.service.auth.AuthService;
+import com.project.portfolio.service.AuthService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+    
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authService.refreshAccessToken(request.getRefreshToken()));
     }
 }

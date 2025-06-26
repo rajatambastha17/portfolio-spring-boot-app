@@ -46,5 +46,8 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 		filterChain.doFilter(request, response);
 	}
-
+//	To Do
+//	Log failures (e.g., expired or invalid tokens) to help debug.
+//	Move hardcoded "Authorization" and "Bearer " to constants if reused elsewhere.
+//	Handle exceptions gracefully (like UsernameNotFoundException) with a global exception handler.
 }

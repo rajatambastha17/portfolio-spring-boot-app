@@ -21,35 +21,36 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	
+
 	private final JwtFilter jwtFilter;
-    private final UserDetailsServiceImpl userDetailsService;
-    
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .userDetailsService(userDetailsService)
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+	private final UserDetailsServiceImpl userDetailsService;
 
-        return http.build();
-    }
-    
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable())
+				.authorizeHttpRequests(
+						auth -> auth.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated())
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.userDetailsService(userDetailsService)
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder())
-            .and()
-            .build();
-    }
+		return http.build();
+	}
+
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+		AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+		builder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+		return builder.build();
+	}
+
+//    To be done
+//    If using roles/authorities, add .hasRole("ADMIN") etc. to authorizeHttpRequests.
+//    Add exception handling for unauthorized access via a custom AuthenticationEntryPoint.
+
 }
