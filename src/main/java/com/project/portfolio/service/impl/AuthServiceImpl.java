@@ -33,13 +33,13 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public AuthenticationResponse register(RegisterRequest request) {
-		if (userRepository.existsByEmail(request.getEmail())) {
+		if (userRepository.existsByEmail(request.email())) {
 			throw new RuntimeException("Email already registered");
 		}
 
 		UserEntity user = new UserEntity();
-		user.setEmail(request.getEmail());
-		user.setPassword(passwordEncoder.encode(request.getPassword()));
+		user.setEmail(request.email());
+		user.setPassword(passwordEncoder.encode(request.password()));
 		userRepository.save(user);
 
 		/*
