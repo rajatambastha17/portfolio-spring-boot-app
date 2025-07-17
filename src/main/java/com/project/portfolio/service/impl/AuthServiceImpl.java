@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.project.portfolio.entity.RefreshTokenEntity;
 import com.project.portfolio.entity.UserEntity;
 import com.project.portfolio.model.request.AuthenticationRequest;
 import com.project.portfolio.model.request.RegisterRequest;
@@ -16,7 +15,6 @@ import com.project.portfolio.model.response.AuthenticationResponse;
 import com.project.portfolio.repository.UserRepository;
 import com.project.portfolio.security.JwtUtil;
 import com.project.portfolio.service.AuthService;
-import com.project.portfolio.service.RefreshTokenService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +26,6 @@ public class AuthServiceImpl implements AuthService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationManager authenticationManager;
 	private final UserDetailsService userDetailsService;
-	private final RefreshTokenService refreshTokenService;
 	private final JwtUtil jwtUtil;
 
 	@Override
@@ -55,8 +52,7 @@ public class AuthServiceImpl implements AuthService {
 //				.authorities(Collections.emptyList()).build();
 
 		String jwtToken = jwtUtil.generateToken(userDetails);
-		String refreshToken = refreshTokenService.createRefreshTokenEntity(user).getToken();
-		return new AuthenticationResponse(jwtToken, refreshToken);
+		return new AuthenticationResponse(jwtToken);
 	}
 
 	@Override
@@ -76,34 +72,11 @@ public class AuthServiceImpl implements AuthService {
 
 		// Fetch your actual UserEntity from DB (safe at this point since auth
 		// succeeded)
-		UserEntity user = userRepository.findByEmail(userDetails.getUsername())
-				.orElseThrow(() -> new RuntimeException("User not found in DB"));
+//		UserEntity user = userRepository.findByEmail(userDetails.getUsername())
+//				.orElseThrow(() -> new RuntimeException("User not found in DB"));
 
 		String jwtToken = jwtUtil.generateToken(userDetails);
-		String refreshToken = refreshTokenService.createRefreshTokenEntity(user).getToken();
-		return new AuthenticationResponse(jwtToken, refreshToken);
-	}
-
-	@Override
-	public AuthenticationResponse refreshAccessToken(String refreshToken) {
-
-		// Validate the old token
-	    RefreshTokenEntity oldToken = refreshTokenService
-	        .verifyExpiration(refreshTokenService.getTokenOrThrow(refreshToken));
-
-	    UserEntity user = oldToken.getUser();
-	    UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
-
-	    // Revoke the old refresh token
-	    refreshTokenService.revokeRefreshTokenEntity(oldToken);
-
-	    // Issue a new refresh token
-	    String newRefreshToken = refreshTokenService.createRefreshTokenEntity(user).getToken();
-
-	    // Issue a new access token
-	    String newAccessToken = jwtUtil.generateToken(userDetails);
-
-	    return new AuthenticationResponse(newAccessToken, newRefreshToken);
+		return new AuthenticationResponse(jwtToken);
 	}
 	
 //	To do

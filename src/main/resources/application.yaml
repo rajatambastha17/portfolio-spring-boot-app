@@ -13,8 +13,23 @@ spring:
         ddl-auto: update
       show-sql: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: [ "prometheus" ]
+  endpoint:
+    prometheus:
+      access: unrestricted
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+          client:
+            requests: true
+
 # JWT secret key (for demo only, store safely in real app!)
 jwt:
-  secret: nkWd3MDZVV449pLVJ7iIyfG+FhdKB4hK3N08IrIize4=
-  refreshTokenExpirationMs: 86400000
-  
+  secret: nkWd3MDZVV449pLVJ7iIyfG+FhdKB4hK3N08IrIize4=  

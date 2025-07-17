@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.portfolio.model.request.AuthenticationRequest;
-import com.project.portfolio.model.request.RefreshTokenRequest;
 import com.project.portfolio.model.request.RegisterRequest;
 import com.project.portfolio.model.response.AuthenticationResponse;
 import com.project.portfolio.service.AuthService;
@@ -19,21 +18,17 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-	
+
 	private final AuthService authService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
-    }
+	@PostMapping("/signup")
+	public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest request) {
+		return ResponseEntity.ok(authService.register(request));
+	}
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(authService.login(request));
-    }
-    
-    @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-        return ResponseEntity.ok(authService.refreshAccessToken(request.getRefreshToken()));
-    }
+	@PostMapping("/login")
+	public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody AuthenticationRequest request) {
+		return ResponseEntity.ok(authService.login(request));
+	}
+
 }
